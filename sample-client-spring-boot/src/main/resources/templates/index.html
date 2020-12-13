@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>MyHealthPlan.Org</title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+<base href="/" />
+<link rel="stylesheet" type="text/css"
+	href="/webjars/bootstrap/css/bootstrap.min.css" />
+<script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+<script type="text/javascript"
+	src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/webjars/js-cookie/js.cookie.js"></script>
+</head>
+<body>
+	<!-- class="footer-copyright text-center py-3" -->
+	<div align="center"
+		style="font-size: 26; color: blue; font-weight: bold;">
+		MyHealthPlan.Org</div>
+	<div class="container" align="left">
+		<label style="font-weight: bold">Welcome! </label> <label
+			style="color: blue" th:text="${session.userid}"
+			th:unless="${session == null}"></label>
+	</div>
+	<div class="container" align="right">
+		<!-- 		<button onclick="logout();" class="btn btn-primary">Logout</button> -->
+		<a href="/logout" onclick="logout();">Logout</a>
+	</div>
+
+	<br>
+
+	<!--  Page Level Table -->
+	<table style="width: 100%;">
+
+		<!--  Page Level Row -->
+		<tr style="width: 100%;">
+
+			<!-- Column - Import Data -->
+			<td style="width: 30%;"><br>
+
+				<div class="container unauthenticated" style="position: absolute;">
+
+					<p align="center" style="font-size: 20; font-weight: bold;">Import
+						Data</p>
+					<a href="/login" target="openPop();">mymedicare.gov</a>
+
+					<div>
+						<select id='myURLs'>
+							<option value="0">Select Payer/Org</option>
+							<option value="1">MyMedicare.gov</option>
+							<option value="2">Aetna.com</option>
+							<option value="3">Express-Scripts.com</option>
+							<option value="4">Metlife.com</option>
+							<option value="5">EyeMed.com</option>
+							<option value="6">WageWorks.com</option>
+						</select>
+					</div>
+
+					<form method="POST" th:action="@{/data}"
+						class="my-login-validation" novalidate="">
+						<div class="form-group">
+							<label for="username">Username</label> <input id="username"
+								type="text" class="form-control" name="username" value=""
+								required autofocus>
+						</div>
+
+						<div class="form-group">
+							<label for="password">Password</label> <input id="password"
+								type="password" class="form-control" name="password" required
+								data-eye>
+						</div>
+
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input" id="check1"
+								name="check1"> <label class="form-check-label"
+								for="check1">Do Not Import Personal Data</label>
+						</div>
+
+						<div class="form-group m-0">
+							<button type="submit" class="btn btn-primary btn-block">
+								Submit</button>
+						</div>
+					</form>
+
+				</div></td>
+
+
+			<!-- Column - Show Data -->
+			<td style="width: 70%;">
+			
+				<div>
+				<label style="font-weight: bold; color: blue;">Date Range </label> 
+					<select id='coverageDateRange'>
+						<option value="2020">2020</option>
+						<option value="2019">2019</option>
+						<option value="2018">2018</option>
+						<option value="2017">2017</option>
+						<option value="2016">2016</option>
+					</select>
+				</div>			
+
+				<div style="position: absolute;">
+
+					<table style="word-wrap: break-word; table-layout: fixed"
+						border="2p">
+						<tr>
+							<td>
+								
+								<br>
+								<div class="container authenticated">
+									<!--  style="display: none" -->
+									
+									<div style="font-size: 16px; color: green; font-weight: bold;">MyMedicare.gov</div>									
+									<br>
+<!-- 									<div>
+										<img src="./html/images/medicare-logo.png"
+											alt="MyMedicare.gov" width="100px;" height="20px;">
+									</div> -->
+									
+									<!-- 									Logged in as: <span id="user"></span>
+									<div>
+										<button onClick="viewPatient()" class="btn btn-primary">Patient</button>
+										<button onClick="viewEoB()" class="btn btn-primary">EoB</button>
+										<button onClick="viewCoverage()" class="btn btn-primary">Coverage</button>
+									</div>
+-->
+									<div style="font-size: 14px; font-weight: bold;">Coverage</div>
+									<table th:each="coverage : ${session.coverages}"
+										style="word-wrap: break-word; table-layout: fixed" border="2p">
+										<tr>
+											<td>Period</td>
+											<td th:text="${coverage.period}">Period</td>
+										</tr>
+										<tr>
+											<td>Status</td>
+											<td th:text="${coverage.status}">Status</td>
+										</tr>
+									</table>
+									<br><br>
+									<div style="font-size: 14px; font-weight: bold;">Patient</div>
+									<table th:each="patient : ${session.patient}"
+										style="word-wrap: break-word; table-layout: fixed" border="2p">
+										<tr>
+											<td>Name</td>
+											<td th:text="${patient.name}">Name</td>
+										</tr>
+										<tr>
+											<td>Patient ID</td>
+											<td th:text="${patient.id}">ID</td>
+										</tr>
+										<tr>
+											<td>Birth Date</td>
+											<td th:text="${patient.birthDate}">Birth Date</td>
+										</tr>
+										<tr>
+											<td>Gender</td>
+											<td th:text="${patient.gender}">Gender</td>
+										</tr>
+									</table>
+
+								</div> <br> <br> <br> <br>
+							</td>
+							<td>
+								<div style="font-size: 16px; color: green; font-weight: bold;">Aetna.com</div>
+								<br>							
+								<table th:each="mdPatient : ${session.mdPatientList}"
+									style="word-wrap: break-word; table-layout: fixed" border="2p">
+									<tr>
+										<td>Name</td>
+										<td th:text="${mdPatient.pname}">Name</td>
+									</tr>
+									<tr>
+										<td>Patient ID</td>
+										<td th:text="${mdPatient.pid}">ID</td>
+									</tr>
+									<tr>
+										<td>Birth Date</td>
+										<td th:text="${mdPatient.pdate}">Birth Date</td>
+									</tr>
+									<tr>
+										<td>Gender</td>
+										<td th:text="${mdPatient.gender}">Gender</td>
+									</tr>
+								</table> <br> <br> <br> <br>
+							</td>
+							<td><div style="font-size: 16px; color: green; font-weight: bold;">Express-Scripts.com</div>
+							<br>
+<!-- 								<table style="word-wrap: break-word; table-layout: fixed"
+									border="2p">
+									th:each="mdPatient : ${mdPatientList}" 
+									<tr>
+										<td>Name</td>
+										<td>Name</td>
+									</tr>
+									<tr>
+										<td>Patient ID</td>
+										<td>ID</td>
+									</tr>
+									<tr>
+										<td>Birth Date</td>
+										<td>Birth Date</td>
+									</tr>
+									<tr>
+										<td>Gender</td>
+										<td>Gender</td>
+									</tr>
+								</table>  -->
+								<br> <br> <br> <br>
+							</td>
+
+							<td><div style="font-size: 16px; color: green; font-weight: bold;">Metlife.com</div>
+							<br>
+<!-- 								<table style="word-wrap: break-word; table-layout: fixed"
+									border="2p">
+									<tr>
+										<td>Name</td>
+										<td>Name</td>
+									</tr>
+									<tr>
+										<td>Patient ID</td>
+										<td>ID</td>
+									</tr>
+									<tr>
+										<td>Birth Date</td>
+										<td>Birth Date</td>
+									</tr>
+									<tr>
+										<td>Gender</td>
+										<td>Gender</td>
+									</tr>
+								</table>  -->
+								<br> <br> <br> <br>
+							</td>
+							<td><div style="font-size: 16px; color: green; font-weight: bold;">EyeMed.com</div>
+							<br>
+<!-- 								<table style="word-wrap: break-word; table-layout: fixed"
+									border="2p">
+									<tr>
+										<td>Name</td>
+										<td>Name</td>
+									</tr>
+									<tr>
+										<td>Patient ID</td>
+										<td>ID</td>
+									</tr>
+									<tr>
+										<td>Birth Date</td>
+										<td>Birth Date</td>
+									</tr>
+									<tr>
+										<td>Gender</td>
+										<td>Gender</td>
+									</tr>
+								</table>  -->
+								<br> <br> <br> <br>
+							</td>
+						</tr>
+						<tr>
+							<td><div style="font-size: 16px; color: green; font-weight: bold;">WageWorks.com</div>
+							<br>
+								<table th:each="data : ${session.dataList}"
+									style="word-wrap: break-word; table-layout: fixed" border="2p">
+									<tr>
+										<td>Name</td>
+										<td th:text="${data.pname}">Name</td>
+									</tr>
+									<tr>
+										<td>Patient ID</td>
+										<td th:text="${data.pid}">ID</td>
+									</tr>
+									<tr>
+										<td>Birth Date</td>
+										<td th:text="${data.pdate}">Birth Date</td>
+									</tr>
+									<tr>
+										<td>Gender</td>
+										<td th:text="${data.gender}">Gender</td>
+									</tr>
+								</table> <br> <br> <br> <br>
+							</td>
+						</tr>
+					</table>
+
+				</div>
+
+			</td>
+
+		</tr>
+
+	</table>
+
+
+	<script type="text/javascript">
+	
+		$(".authenticated").hide();
+		var token_value =  <%= Session['token_value']%>;
+		alert(token_value);
+		if (token_value != null) {
+			$(".authenticated").show();
+		}
+	
+/* 		$
+				.get(
+						"/principal",
+						function(data) {
+							$("#user")
+									.html(
+											data.userAuthentication.details.entry[0].resource.name[0].given[0]
+													+ " "
+													+ data.userAuthentication.details.entry[0].resource.name[0].family);
+
+							$(".unauthenticated").hide()
+							$(".authenticated").show()
+						});
+
+*/
+/*		var logout = function() {
+			$.post("/logout", function() {
+ 				$("#user").html('');
+				$(".unauthenticated").show();
+				$(".authenticated").hide(); 
+			})
+			return true;
+		} 
+*/
+
+		function logout() {
+			window.location.href = "localhost:8082/logout";
+		}
+		
+		function viewPatient() {
+			window.location.href = "http://localhost:8082/patient";
+		}
+
+		function viewEoB() {
+			window.location.href = "http://localhost:8082/eob";
+		}
+
+		function viewCoverage() {
+			window.location.href = "http://localhost:8082/coverage";
+		}
+
+		$.ajaxSetup({
+			beforeSend : function(xhr, settings) {
+				if (settings.type == 'POST' || settings.type == 'PUT'
+						|| settings.type == 'DELETE') {
+					if (!(/^http:.*/.test(settings.url) || /^https:.*/
+							.test(settings.url))) {
+						// Only send the token to relative URLs i.e. locally.
+						xhr.setRequestHeader("X-XSRF-TOKEN", Cookies
+								.get('XSRF-TOKEN'));
+					}
+				}
+			}
+		});
+
+		function openPop() {
+			/* 			var Sel_Ind = document.getElementById('myURLs').selectedIndex;
+			 var popUrl = document.getElementById('myURLs').options[Sel_Ind].value; */
+			window.open("/login", "",
+					"width=600,height=600,resizable,")
+		}
+	</script>
+
+</body>
+</html>

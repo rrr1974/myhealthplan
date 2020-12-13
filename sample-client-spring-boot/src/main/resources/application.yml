@@ -1,0 +1,24 @@
+spring:  
+  main:
+    allow-bean-definition-overriding: true
+    
+  jackson:
+    serialization:
+      indent-output: true
+security:
+  oauth2:
+    client:
+      clientId: MbIiUOb2FVwoHjhoOvZNSnajcbmScPBlTYASlA0H
+      clientSecret: 6RPbB5ByfFbj9ifkHkT0Jt3FH7zWTq9oV1uGU9QP5MSAkVCP0Z4sZV1BC5ms1EXRZoWeODAultifKe66GkKGkCmiwss7SInLNvsx2luQVwxii9RH4YAel8I7OtsjjAcC
+      accessTokenUri: https://sandbox.bluebutton.cms.gov/v1/o/token/
+      userAuthorizationUri: https://sandbox.bluebutton.cms.gov/v1/o/authorize/
+      tokenName: access_token
+      authenticationScheme: header
+      clientAuthenticationScheme: header
+      scope: profile patient/Coverage.read patient/Patient.read patient/ExplanationOfBenefit.read
+    resource:
+      userInfoUri: https://sandbox.bluebutton.cms.gov/v1/fhir/Patient/
+
+server:  port: 8082
+
+...
